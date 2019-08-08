@@ -58,7 +58,7 @@ seriesRouter.post('/', setRequestBody, (req, res, next) => {
                     if (error) {
                         next(error);
                     } else {
-                        db.get(`SELECT * FROM Artist WHERE id = $lastID`,
+                        db.get(`SELECT * FROM Series WHERE id = $lastID`,
                         {
                             $lastID: this.lastID
                         },
@@ -82,17 +82,16 @@ seriesRouter.put('/:seriesId', setRequestBody, (req, res, next) =>{
         if (req.name && req.description) {
             db.run(`UPDATE Series
                     SET name = $name, description = $description
-                    WHERE id = $id`,
+                    WHERE id = ${req.params.seriesId}`,
                     {
                         $name: req.name,
-                        $decription: req.description,
-                        $id: ident
+                        $description: req.description,
                     },
                     (err) => {
                         if(err) {
                             next(err);
                         } else {
-                            db.get(`SELECT * FROM Artist WHERE id = $id`,
+                            db.get(`SELECT * FROM Series WHERE id = $id`,
                             {
                                 $id: ident
                             }, 
