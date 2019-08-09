@@ -1,26 +1,29 @@
 const seriesRouter = require('express').Router();
 const sqlite = require('sqlite3');
 const db = new sqlite.Database(process.env.TEST_DATABASE || '../database.sqlite');
+const issuesRouter = require('./issues.js');
 
 
 
 /*This router is for all seriesId requests. It attaches the row of the that series to the request body*/
 seriesRouter.param('seriesId', (req, res, next, seriesId) => {
-    db.get(`SELECT * FROM Series WHERE id = $id`,
+    db.all(`SELECT * FROM Series WHERE id = $id`,
             {
                 $id: seriesId
             },
-            (err, row) => {
+            (err, rows) => {
                 if (err){
                     next(err);
-                } else if (row) {
-                    req.series = row;
+                } else if (rows) {
+                    req.series = rows;
                     next();
                 } else {
                     res.sendStatus(404);
                 }
             });
 })
+
+seriesRouter.use('/:seriesId/issues', issuesRouter);
 
 
 const setRequestBody = (req, res, next) => {

@@ -16,4 +16,14 @@ db.run(`CREATE TABLE IF NOT EXISTS Series (
         description TEXT NOT NULL
         )`);
 
-
+db.run(`CREATE TABLE IF NOT EXISTS Issue (
+        id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        issue_number INTEGER NOT NULL,
+        publication_date TEXT NOT NULL,
+        artist_id INTEGER NOT NULL,
+        series_id INTEGER NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (artist_id) REFERENCES Artist(id),
+        FOREIGN KEY (series_id) REFERENCES Series(id)
+)`);
